@@ -22,4 +22,4 @@ if __name__ == "__main__":
     query_res = dune.refresh(query)
 
     df = pd.DataFrame(query_res)
-    df.to_csv('./sample_data/{}.csv'.format(name_), index = None)
+    df.to_csv("./sample_data/data.csv", index = None)
