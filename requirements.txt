@@ -2,3 +2,4 @@ json
 pglast
 dune-client
 python-dotenv
+pandas
