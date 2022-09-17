@@ -1,7 +1,9 @@
 import requests
 import json
 
-url = "https://core-hsr.dune.com/v1/graphql"
+dashboard_url = "https://dune.com/perdedune/perdedune"
+
+endpoint_url = "https://core-hsr.dune.com/v1/graphql"
 
 def query_list(user,slug):
   payload = json.dumps({
@@ -18,7 +20,7 @@ def query_list(user,slug):
     'X-Hasura-Api-Key': ''
   }
 
-  response = requests.request("POST", url, headers=headers, data=payload)
+  response = requests.request("POST", endpoint_url, headers=headers, data=payload)
 
   viz_id_list = []
   visualization_widgets = response.json()["data"]["dashboards"][0]["visualization_widgets"]
@@ -44,10 +46,13 @@ def sql_from_query(id):
     'X-Hasura-Api-Key': ''
   }
 
-  response = requests.request("POST", url, headers=headers, data=payload)
+  response = requests.request("POST", endpoint_url, headers=headers, data=payload)
   return (response.json()["data"]["queries"][0]["query"])
-  
-unique_queries = query_list("perdedune","perdedune")#("DarenMatsuoka","NFT-Minting-Stats")#("perdedune","perdedune")
+
+dashboard_user = dashboard_url.split("/")[-2]
+dashboard_slug = dashboard_url.split("/")[-1]
+
+unique_queries = query_list(dashboard_user,dashboard_slug)
 
 for c in unique_queries:
   with open("./inputs/{}_input.sql".format(c),"w") as f:
