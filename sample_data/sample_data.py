@@ -21,5 +21,5 @@ if __name__ == "__main__":
     dune = DuneClient(os.environ["DUNE_API_KEY"])
     query_res = dune.refresh(query)
 
-    df = pd.read_json (query_res)
-    df.to_csv ('.\sample_data\{{}}.csv'.format(name_), index = None)
+    df = pd.DataFrame(query_res)
+    df.to_csv('./sample_data/{}.csv'.format(name_), index = None)
