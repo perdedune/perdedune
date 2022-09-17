@@ -1,4 +1,4 @@
-from sql_from_dashboard import query_list, sql_from_query, sql_extractor
+from sql_from_dashboard import sql_extractor
 
 # enter dashboard url here
 dashboard_url = "https://dune.com/perdedune/perdedune"
