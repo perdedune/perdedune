@@ -1,11 +1,13 @@
 import requests
 import json
 
-dashboard_url = "https://dune.com/perdedune/perdedune"
-
+# graphql endpoint
 endpoint_url = "https://core-hsr.dune.com/v1/graphql"
 
-def query_list(user,slug):
+# extract unique queries from dashboard params
+
+def list_queries_from_dashboard(user,slug):
+  # create json for request
   payload = json.dumps({
     "operationName": "FindDashboard",
     "variables": {
@@ -20,15 +22,23 @@ def query_list(user,slug):
     'X-Hasura-Api-Key': ''
   }
 
+  # make request
   response = requests.request("POST", endpoint_url, headers=headers, data=payload)
 
+  # generate a list of unique query id's by traversing through the returned json
   viz_id_list = []
   visualization_widgets = response.json()["data"]["dashboards"][0]["visualization_widgets"]
+
+  # query id per visualisation
   for c in visualization_widgets:
     viz_id_list.append(c["visualization"]["query_details"]["query_id"])
   return(list(set(viz_id_list)))
 
-def sql_from_query(id):
+# sql from single query
+
+def sql_from_query(id): 
+  # create json for request
+
   payload = json.dumps({
     "operationName": "FindQuery",
     "variables": {
@@ -46,14 +56,20 @@ def sql_from_query(id):
     'X-Hasura-Api-Key': ''
   }
 
+  # make request
   response = requests.request("POST", endpoint_url, headers=headers, data=payload)
   return (response.json()["data"]["queries"][0]["query"])
 
-dashboard_user = dashboard_url.split("/")[-2]
-dashboard_slug = dashboard_url.split("/")[-1]
+# master function of the file
+def sql_extractor(dashboard_url):
+  # string manipulation to extract the dashboard params from url
+  dashboard_user = dashboard_url.split("/")[-2]
+  dashboard_slug = dashboard_url.split("/")[-1]
 
-unique_queries = query_list(dashboard_user,dashboard_slug)
+  # extract unique queries from dashboard params as a list
+  unique_queries = list_queries_from_dashboard(dashboard_user,dashboard_slug)
 
-for c in unique_queries:
-  with open("./inputs/{}_input.sql".format(c),"w") as f:
-    f.write(sql_from_query(c))
+  # iterate over list and generate a *_input.sql file to analyse at later stages
+  for c in unique_queries:
+    with open("./inputs/{}_input.sql".format(c),"w") as f:
+      f.write(sql_from_query(c))
