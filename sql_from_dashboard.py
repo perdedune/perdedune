@@ -1,5 +1,6 @@
 import requests
 import json
+from pathlib import Path
 
 # graphql endpoint
 endpoint_url = "https://core-hsr.dune.com/v1/graphql"
@@ -70,6 +71,9 @@ def sql_extractor(dashboard_url):
   unique_queries = list_queries_from_dashboard(dashboard_user,dashboard_slug)
 
   # iterate over list and generate a *_input.sql file to analyse at later stages
+  pathvar = dashboard_user+"_"+dashboard_slug+"/input"
+  Path(pathvar).mkdir(parents=True, exist_ok=True)
+
   for c in unique_queries:
-    with open("./inputs/{}_input.sql".format(c),"w") as f:
+    with open(pathvar+"/{}.sql".format(c),"w") as f:
       f.write(sql_from_query(c))

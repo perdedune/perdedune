@@ -1,5 +1,7 @@
 import difflib
 import argparse
+from os import path
+
 from pprint import pp
 from pglast import parse_sql
 from pglast.parser import parse_sql_json
@@ -9,6 +11,7 @@ from pathlib import Path
 def deepp(h, depth=5):
 	pp(h.stmt(depth=depth, skip_none=True))
 
+# parse args
 parser = argparse.ArgumentParser(
 	usage="%(prog)s [OPTION] [FILE]...",
 	description="prettify SQL statements and check for similar clauses",
@@ -19,10 +22,15 @@ parser.add_argument(
 )
 parser.add_argument("files", nargs="*")
 args = parser.parse_args()
+
+# extract filenames
 filenames = []
-filenames.append(args.files[0].split('.')[0])
-filenames.append(args.files[1].split('.')[0])
+filenames.append(os.path.basename(args.files[0]).split('.')[0])
+filenames.append(os.path.basename(args.files[1]).split('.')[0])
+
 print("filenames", filenames)
+
+# open both files
 with open(args.files[0]) as f:
 	holders = f.read()
 with open(args.files[1]) as g:
