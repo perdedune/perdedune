@@ -47,7 +47,7 @@ def sql_from_query(id):
   response = requests.request("POST", url, headers=headers, data=payload)
   return (response.json()["data"]["queries"][0]["query"])
   
-unique_queries = query_list("DarenMatsuoka","NFT-Minting-Stats")#("perdedune","perdedune")
+unique_queries = query_list("perdedune","perdedune")#("DarenMatsuoka","NFT-Minting-Stats")#("perdedune","perdedune")
 
 for c in unique_queries:
   with open("./inputs/{}_input.sql".format(c),"w") as f:
