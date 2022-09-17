@@ -73,4 +73,3 @@ def sql_extractor(dashboard_url):
   for c in unique_queries:
     with open("./inputs/{}_input.sql".format(c),"w") as f:
       f.write(sql_from_query(c))
-
