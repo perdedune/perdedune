@@ -30,7 +30,7 @@ with open(args.files[1]) as g:
 
 h = parse_sql(holders)[0]
 m = parse_sql(marketinfo)[0]
-print("Will cock be successfully sucked:", h.stmt.withClause == m.stmt.withClause) # true
+print("Will **** be successfully sucked:", h.stmt.withClause == m.stmt.withClause) # true
 
 h_prettyprinted = IndentedStream()(h)
 m_prettyprinted = IndentedStream()(m)
