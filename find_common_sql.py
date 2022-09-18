@@ -27,14 +27,14 @@ Abstraction = namedtuple('Abstraction', ['sql', 'alias'])
 sqls = []
 for file in files:
 	with open(file) as x:
-		sql = Sql(x.read(), path.basename(file))
+		sql = Sql(sqlglot.parse_one(x.read()), path.basename(file))
 		sqls.append(sql)
 
-asts = [sqlglot.parse_one(sql.parsed) for sql in sqls]
+# sqls = [sqlglot.parse_one(sql.parsed) for sql in sqls]
 
 ctes = []
-for a in asts:
-	ctes.extend(a.ctes)
+for sql in sqls:
+	ctes.extend(sql.parsed.ctes)
 print(len(ctes), "CTEs found,", len(set(ctes)), "of which are unique")
 ctes = list(set(ctes))
 
@@ -43,8 +43,19 @@ for cte in ctes:
 	# transform WITH( SELECT * FROM FDSA ) -> SELECT * FROM FDSA
 	with_stmt_removed = [f for f in cte.flatten()][0]
 	abstractions.append(Abstraction(with_stmt_removed.sql(pretty=True), cte.alias))
-
+# write out the abstractions
 Path("{}/output".format(args.project)).mkdir(parents=True, exist_ok=True)
 for a in abstractions:
 	with open("{}/output/{}.sql".format(args.project, a.alias), "w") as f:
 		f.write(a.sql)
+
+# write the last unique sql queries
+for sql in sqls:
+	# remove the WITH CTE, reconstruct the remaining SELECT statement
+	flattened = [x for x in sql.parsed.flatten()]
+	flattened = flattened[:len(flattened)-1] # removes the WITH CTE
+	answer = sqlglot.expressions.select(*flattened)
+
+	# write to file
+	with open("{}/output/{}".format(args.project, sql.filename), "w") as f:
+		f.write(answer.sql(pretty=True))

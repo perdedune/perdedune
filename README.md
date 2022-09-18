@@ -14,7 +14,7 @@ python main.py "https://dune.com/perdedune/perdedune"
 # new directory perdedune_perdedune was created
 
 python find_common_sql.py perdedune_perdedune
-# common sql statements output to perdedune_perdedune/output
+# abstractions(common sql statements) and unique select statements written to perdedune_perdedune/output
 ```
 
 ## Output:
