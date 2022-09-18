@@ -21,7 +21,7 @@ python find_common_sql.py perdedune_perdedune
 
 ## Architecture:
 
-<img src=diagram.jpeg>
+<img src=diagram.jpg>
 
 ## Known limitations:
 * At the moment, the process is limited to CTE, and  queries.
