@@ -1,7 +1,11 @@
 # Perdedune
 Automagically parse queries from a dashboard to remove duplicate sets and streamline your code!
 
+### perdedune tool demo
 [![asciicast](https://asciinema.org/a/uOOS9DwAKtDTud4QmJyCpfD84.svg)](https://asciinema.org/a/uOOS9DwAKtDTud4QmJyCpfD84)
+
+### perdedune query validation demo
+[![asciicast](https://asciinema.org/a/75JHlWGp8w2gR3SyBauC2S5LB.svg)](https://asciinema.org/a/75JHlWGp8w2gR3SyBauC2S5LB)
 
 ## Usage:
 Run the following commands in your terminal:
