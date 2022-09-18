@@ -28,7 +28,8 @@ python find_common_sql.py perdedune_perdedune
 
 ## Sample data
 In order to validate our process, we sampled an existing Dune table using the Dune API.
-The script and sample data are available at /sample_data .
+The script and sample data are available at /sample_data.
+To re-extract, simply run /sample_data/sample_data.py.
 
 ## Known limitations:
 * At the moment, the process is limited to CTE, and  queries.
