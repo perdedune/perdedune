@@ -1,5 +1,5 @@
 # Perdedune
-Automagically parse queries from a dashboard to remove duplicate sets and streamline your code! 
+Automagically parse queries from a dashboard to remove duplicate sets and streamline your code!
 
 <img src=img/1.jpeg/>
 
@@ -7,8 +7,14 @@ Automagically parse queries from a dashboard to remove duplicate sets and stream
 Run the following commands in your terminal:
 ```
 git clone https://github.com/perdedune/perdedune/ ./perdedune
-cd perdedune 
-main.py "https://dune.com/perdedune/perdedune"
+cd perdedune
+pip install -r requirements.txt
+
+python main.py "https://dune.com/perdedune/perdedune"
+# new directory perdedune_perdedune was created
+
+python find_common_sql.py perdedune_perdedune
+# common sql statements output to perdedune_perdedune/output
 ```
 
 ## Output:
