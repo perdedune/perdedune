@@ -1,2 +1,7 @@
-# dune_to_input_sql
+# Perdedune
+
+
+Automate the 
+
+
 extraction from dune graphql to input.sql
