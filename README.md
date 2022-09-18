@@ -2,6 +2,7 @@
 Automagically parse queries from a dashboard to remove duplicate sets and streamline your code!
 
 [![asciicast](https://asciinema.org/a/uOOS9DwAKtDTud4QmJyCpfD84.svg)](https://asciinema.org/a/uOOS9DwAKtDTud4QmJyCpfD84)
+
 ## Usage:
 Run the following commands in your terminal:
 ```
@@ -20,6 +21,7 @@ python find_common_sql.py perdedune_perdedune
 
 ## Architecture:
 
+</img src=diagram.jpeg>
 
 ## Known limitations:
 * At the moment, the process is limited to CTE, and  queries.
