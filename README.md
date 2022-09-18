@@ -23,5 +23,5 @@ python find_common_sql.py perdedune_perdedune
 
 
 ## Known limitations:
-* At the moment, the process is limited to CTE queries.
+* At the moment, the process is limited to CTE, and  queries.
 * Further, the process currently assumes a unique CTE alias scheme.
