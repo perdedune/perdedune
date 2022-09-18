@@ -5,4 +5,3 @@ dashboard_url = "https://dune.com/tecommons/TECommons"
 
 # extract unique sql files from dashboard
 sql_extractor(dashboard_url)
-

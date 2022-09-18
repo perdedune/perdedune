@@ -3,15 +3,14 @@ import argparse
 from os import path
 
 from pprint import pp
-from pglast import parse_sql
-from pglast.parser import parse_sql_json
-from pglast.stream import RawStream, IndentedStream
 from pathlib import Path
+from os import path
+from collections import namedtuple
+import sqlglot
 
 def deepp(h, depth=5):
 	pp(h.stmt(depth=depth, skip_none=True))
 
-# parse args
 parser = argparse.ArgumentParser(
 	usage="%(prog)s [OPTION] [FILE]...",
 	description="prettify SQL statements and check for similar clauses",
@@ -23,39 +22,30 @@ parser.add_argument(
 parser.add_argument("files", nargs="*")
 args = parser.parse_args()
 
-# extract filenames
-filenames = []
-filenames.append(os.path.basename(args.files[0]).split('.')[0])
-filenames.append(os.path.basename(args.files[1]).split('.')[0])
 
-print("filenames", filenames)
+Sql = namedtuple('Sql', ['parsed', 'filename'])
+Abstraction = namedtuple('Abstraction', ['sql', 'alias'])
+sqls = []
+for file in args.files:
+	with open(file) as x:
+		sql = Sql(x.read(), path.basename(file))
+		sqls.append(sql)
 
-# open both files
-with open(args.files[0]) as f:
-	holders = f.read()
-with open(args.files[1]) as g:
-	marketinfo = g.read()
+asts = [sqlglot.parse_one(sql.parsed) for sql in sqls]
 
-h = parse_sql(holders)[0]
-m = parse_sql(marketinfo)[0]
-print("Will **** be successfully sucked:", h.stmt.withClause == m.stmt.withClause) # true
+ctes = []
+for a in asts:
+	ctes.extend(a.ctes)
+print(len(ctes), "CTEs found,", len(set(ctes)), "of which are unique")
+ctes = list(set(ctes))
 
-h_prettyprinted = IndentedStream()(h)
-m_prettyprinted = IndentedStream()(m)
+abstractions = []
+for cte in ctes:
+	# transform WITH( SELECT * FROM FDSA ) -> SELECT * FROM FDSA
+	with_stmt_removed = [f for f in cte.flatten()][0]
+	abstractions.append(Abstraction(with_stmt_removed.sql(pretty=True), cte.alias))
 
-s = difflib.SequenceMatcher(None, h_prettyprinted, m_prettyprinted)
-match = s.find_longest_match()
-if match.size > 0:
-	print("Found similar SQL, writing to abstraction.sql")
-else:
-	print("Couldn't find similar SQL, aborting")
-	exit()
-Path("output").mkdir(parents=True, exist_ok=True)
-with open('output/abstraction.sql', 'w') as f:
-	f.write(h_prettyprinted[match.a:match.size])
 
-print("writing the different part to difference files")
-with open('output/{}.sql'.format(filenames[0]), 'w') as f:
-	f.write("SELECT " + h_prettyprinted[match.size:])
-with open('output/{}.sql'.format(filenames[1]), 'w') as f:
-	f.write("SELECT " + m_prettyprinted[match.size:])
+for a in abstractions:
+	with open("output/{}.sql".format(a.alias), "w") as f:
+		f.write(a.sql)
